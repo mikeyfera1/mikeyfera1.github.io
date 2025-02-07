@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            align-items: "center";
+            justify-content: "center";
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: pink;
+            position: relative;
+            min-height: 100vh;
+        }
+        #question, #yes-button {
+            display: none;
+        }
+        .heart {
+            color: red;
+            font-size: 24px;
+        }
+        .letter {
+            display: none;
+            background: white;
+            padding: 20px;
+            border: 2px solid red;
+            width: 300px;
+            margin: 20px auto;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        #yes-button {
+            position: absolute;
+        }
+        #congrats-image {
+            display: none;
+            width: 400px;
+            margin-left: 500px;
+            margin-top: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="name">
+        <h2>Enter your name:</h2>
+    </div>
+    <input type="text" id="name-input" placeholder="Her Beautiful Name...">
+    <button onclick="askQuestion()">Submit</button>
+    
+    <div id="letter" class="letter">
+        <h2>Dear Schmoops🐾🦦💖,</h2>
+        <p>Will you be my Valentine?</p>
+    </div>
+    
+    <button id="yes-button" onclick="nextYes()">Yes</button>
+    <p id="final-message" style="display:none;"></p>
+
+    <audio id="bg-music" loop>
+        <source src="the_song.mp3" type="audio/mpeg">
+    </audio>
+
+    <script> 
+        let yesCount = 0;
+        let messages = ["Yes!", "Of course!", "Absolutely!", "No doubt!", "A million times yes!"];
+        function askQuestion() {
+            let name = document.getElementById("name-input").value.trim().toLowerCase();
+            if (name.toLowerCase() !== "schmoops") {
+                alert("Come on now, you know your name :)))")
+                return;
+            }
+            document.getElementById("letter").style.display = "block";
+            document.getElementById("yes-button").style.display = "inline";
+            document.getElementById("name").style.display = "none";
+            document.getElementById("name-input").style.display = "none";
+            event.target.style.display = "none";
+            moveButton();
+
+            document.getElementById("bg-music").play();
+        }
+
+        function nextYes() {
+            yesCount++;
+            if (yesCount < messages.length) {
+                document.getElementById("yes-button").innerText = messages[yesCount];
+                moveButton();
+            } else {
+                document.getElementById("letter").style.display = "none";
+                document.getElementById("yes-button").style.display = "none";
+                document.getElementById("final-message").innerHTML = `Congrats, Schmoops! You are my Valentine! 💖 \n I am so glad you came into my life and I thank you for that. I love everything
+                you do for me and I love how you treat me, as you always show your love and care for me and are always there for me. I really could not have ask for anyone
+                better. Hope I can do the same for you... I love you 8>`;
+                document.getElementById("final-message").style.display = "block";
+                document.getElementById("congrats-image").style.display = "block";
+                document.getElementById("name-input").style.display = "none";
+            }
+        }
+        
+        function moveButton() {
+            let x = Math.random() * (window.innerWidth - 100);
+            let y = Math.random() * (window.innerHeight - 50);
+            document.getElementById("yes-button").style.left = `${x}px`;
+            document.getElementById("yes-button").style.top = `${y}px`;
+        }
+    </script>
+</body>
+<img id="congrats-image" src="my_love.jpg" alt="Valentine's image">
+</html>
