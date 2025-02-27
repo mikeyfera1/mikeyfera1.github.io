@@ -1,109 +1,162 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trust me...</title>
-    <style>
-        body {
-            align-items: "center";
-            justify-content: "center";
+
+<html>
+    <head>
+        <meta charset=""UTF-8>
+        <meta name="viewport" content="widt=device-width, initial-scale=1.0">
+        <title>Quote of the Day</title>
+        <link rel="icon" type="image/x-icon" href="heart.ico">
+        <style>
+             /* Full-page container */
+        .background-container {
+            position: fixed; /* Fixes it in place */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevents scrolling */
+        }
+
+        /* Background image with blur */
+        .background-container::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('quotes.png') center/cover no-repeat;
+            filter: blur(8px); /* Blur effect */
+            z-index: -2; /* Behind everything */
+        }
+
+        /* Dark overlay */
+        .background-container::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            z-index: -1; /* Behind text */
+        }
+
+        /* Centered text */
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2rem;
             text-align: center;
             font-family: Arial, sans-serif;
-            margin: 50px;
-            background-color: pink;
-            position: relative;
-            min-height: 100vh;
         }
-        #question, #yes-button {
-            display: none;
-        }
-        .heart {
-            color: red;
-            font-size: 24px;
-        }
-        .letter {
-            display: none;
-            background: white;
-            padding: 20px;
-            border: 2px solid red;
-            width: 300px;
-            margin: 20px auto;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-        }
-        #yes-button {
-            position: absolute;
-        }
-        #congrats-image {
-            display: none;
-            width: 400px;
-            margin-left: 500px;
-            margin-top: 20px auto;
-        }
-    </style>
-</head>
-<body>
-    <div id="name">
-        <h2>Enter your name:</h2>
-    </div>
-    <input type="text" id="name-input" placeholder="Her Beautiful Name...">
-    <button onclick="askQuestion()">Submit</button>
-    
-    <div id="letter" class="letter">
-        <h2>Dear Schmoops🐾🦦💖,</h2>
-        <p>Will you be my Valentine?</p>
-    </div>
-    
-    <button id="yes-button" onclick="nextYes()">Yes</button>
-    <p id="final-message" style="display:none;"></p>
+        </style>
+    </head>
 
-    <audio id="bg-music" loop>
-        <source src="the_song.mp3" type="audio/mpeg">
-    </audio>
-
-    <script> 
-        let yesCount = 0;
-        let messages = ["Yes!", "Of course!", "Absolutely!", "No doubt!", "A million times yes!"];
-        function askQuestion() {
-            let name = document.getElementById("name-input").value.trim().toLowerCase();
-            if (name.toLowerCase() !== "schmoops") {
-                alert("Come on now, you know your name :)))")
-                return;
-            }
-            document.getElementById("letter").style.display = "block";
-            document.getElementById("yes-button").style.display = "inline";
-            document.getElementById("name").style.display = "none";
-            document.getElementById("name-input").style.display = "none";
-            event.target.style.display = "none";
-            moveButton();
-
-            document.getElementById("bg-music").play();
+    <body>
+        <div class="background-container"></div>
+        <div class="content">
+            <p id="result"></p>
+        </div>
+        <script>
+            const quotes = [
+                "Success is not final, failure is not fatal: it is the courage to continue that counts. — Winston Churchill",
+                "The only limit to our realization of tomorrow is our doubts of today. — Franklin D. Roosevelt",
+                "Do what you can, with what you have, where you are. — Theodore Roosevelt",
+                "Opportunities don’t happen. You create them. — Chris Grosser",
+                "It always seems impossible until it’s done. — Nelson Mandela",
+                "Hardships often prepare ordinary people for an extraordinary destiny. — C.S. Lewis",
+                "If you want to achieve greatness, stop asking for permission. — Unknown",
+                "There are no limits to what you can accomplish, except the limits you place on your own thinking. — Brian Tracy",
+                "You don’t have to be great to start, but you have to start to be great. — Zig Ziglar",
+                "Believe you can and you’re halfway there. — Theodore Roosevelt",
+                "A river cuts through rock not because of its power, but because of its persistence. — Jim Watkins",
+                "The harder the battle, the sweeter the victory. — Les Brown",
+                "Fall seven times, stand up eight. — Japanese Proverb",
+                "The difference between ordinary and extraordinary is that little extra. — Jimmy Johnson",
+                "There is no substitute for hard work. — Thomas Edison",
+                "Do what is right, not what is easy nor what is popular. — Roy T. Bennett",
+                "The future depends on what you do today. — Mahatma Gandhi",
+                "Nothing worth having comes easy. — Theodore Roosevelt",
+                "Don’t be afraid to fail. Be afraid not to try. — Michael Jordan",
+                "If you are not willing to risk the usual, you will have to settle for the ordinary. — Jim Rohn",
+                "You are enough just as you are. — Meghan Markle",
+                "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment. — Ralph Waldo Emerson",
+                "No one can make you feel inferior without your consent. — Eleanor Roosevelt",
+                "Act as if what you do makes a difference. It does. — William James",
+                "Trust yourself. You know more than you think you do. — Dr. Benjamin Spock",
+                "Your only limit is your mind. — Unknown",
+                "Do not wait for permission to be great. — Debasish Mridha",
+                "Be yourself; everyone else is already taken. — Oscar Wilde",
+                "If you believe in yourself, anything is possible. — Miley Cyrus",
+                "Loving yourself isn’t vanity. It’s sanity. — Katrina Mayer",
+                "Courage is not the absence of fear, but rather the judgment that something else is more important than fear. — Ambrose Redmoon",
+                "Fear kills more dreams than failure ever will. — Suzy Kassem",
+                "Do one thing every day that scares you. — Eleanor Roosevelt",
+                "The only way to do great work is to love what you do. — Steve Jobs",
+                "Great things never come from comfort zones. — Unknown",
+                "You must do the thing you think you cannot do. — Eleanor Roosevelt",
+                "Everything you want is on the other side of fear. — Jack Canfield",
+                "Take risks: if you win, you will be happy; if you lose, you will be wise. — Unknown",
+                "Feel the fear and do it anyway. — Susan Jeffers",
+                "Fear is only as deep as the mind allows. — Japanese Proverb",
+                "Happiness is not something ready-made. It comes from your own actions. — Dalai Lama",
+                "A positive attitude gives you power over your circumstances instead of your circumstances having power over you. — Joyce Meyer",
+                "Happiness depends upon ourselves. — Aristotle",
+                "Enjoy the little things in life, for one day you may look back and realize they were the big things. — Robert Brault",
+                "The best way to cheer yourself up is to try to cheer someone else up. — Mark Twain",
+                "The secret of happiness is not in doing what one likes, but in liking what one does. — James M. Barrie",
+                "Optimism is the faith that leads to achievement. — Helen Keller",
+                "A joyful heart is the inevitable result of a heart burning with love. — Mother Teresa",
+                "Smile, breathe, and go slowly. — Thich Nhat Hanh",
+                "Your energy introduces you before you even speak. — Unknown",
+                "Dream big and dare to fail. — Norman Vaughan",
+                "If you can dream it, you can do it. — Walt Disney",
+                "Start where you are. Use what you have. Do what you can. — Arthur Ashe",
+                "Set your goals high, and don’t stop until you get there. — Bo Jackson",
+                "Dreams don’t work unless you do. — John C. Maxwell",
+                "A goal without a plan is just a wish. — Antoine de Saint-Exupéry",
+                "All our dreams can come true, if we have the courage to pursue them. — Walt Disney",
+                "You are never too old to set another goal or to dream a new dream. — C.S. Lewis",
+                "It’s not whether you get knocked down, it’s whether you get up. — Vince Lombardi",
+                "Go confidently in the direction of your dreams. Live the life you have imagined. — Henry David Thoreau",
+                "A leader is one who knows the way, goes the way, and shows the way. — John C. Maxwell",
+                "The function of leadership is to produce more leaders, not more followers. — Ralph Nader",
+                "True leaders don’t create followers. They create more leaders. — Tom Peters",
+                "The best way to predict the future is to create it. — Peter Drucker",
+                "Leadership is not about being in charge. It is about taking care of those in your charge. — Simon Sinek",
+                "To handle yourself, use your head; to handle others, use your heart. — Eleanor Roosevelt",
+                "A good leader takes a little more than his share of the blame, a little less than his share of the credit. — Arnold H. Glasow",
+                "Be strong enough to stand alone, smart enough to know when you need help, and brave enough to ask for it. — Unknown",
+                "The task of the leader is to get their people from where they are to where they have not been. — Henry Kissinger",
+                "The greatest leaders are those who inspire others to believe in themselves. — Unknown",
+                "Tough times never last, but tough people do. — Robert H. Schuller",
+                "You never know how strong you are until being strong is your only choice. — Bob Marley",
+                "Sometimes you don’t realize your own strength until you come face to face with your greatest weakness. — Susan Gale",
+                "The world breaks everyone, and afterward, some are strong at the broken places. — Ernest Hemingway",
+                "Storms make trees take deeper roots. — Dolly Parton",
+                "You are braver than you believe, stronger than you seem, and smarter than you think. — A.A. Milne",
+                "Out of difficulties grow miracles. — Jean de La Bruyère",
+                "What lies behind us and what lies before us are tiny matters compared to what lies within us. — Ralph Waldo Emerson",
+                "Failure is simply the opportunity to begin again, this time more intelligently. — Henry Ford",
+                "Resilience is knowing that you are the only one who has the power and responsibility to pick yourself up. — Mary Holloway",
+                "Creativity is intelligence having fun. — Albert Einstein",
+                "Don’t be afraid to be different. Be afraid of being the same as everyone else. — Unknown",
+                "Imagination is more important than knowledge. — Albert Einstein",
+                "Everything you can imagine is real. — Pablo Picasso",
+                "The creative adult is the child who survived. — Ursula K. Le Guin",
+                "Your only competition is the person you were yesterday. — Unknown",
+                "A comfort zone is a beautiful place, but nothing ever grows there. — Unknown",
+                "The mind is everything. What you think, you become. — Buddha",
+                "Your potential is endless. Go do what you were created to do. — Unknown",
+                "Each day, we must strive for constant and never-ending improvement. — Tony Robbins",
+                "Small daily improvements over time lead to stunning results. — Robin Sharma"
+                ];
+        function showRandomQuote() {
+            let quote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById("result").innerText = quote;
         }
 
-        function nextYes() {
-            yesCount++;
-            if (yesCount < messages.length) {
-                document.getElementById("yes-button").innerText = messages[yesCount];
-                moveButton();
-            } else {
-                document.getElementById("letter").style.display = "none";
-                document.getElementById("yes-button").style.display = "none";
-                document.getElementById("final-message").innerHTML = `Congrats, Schmoops! You are my Valentine! 💖 \n I am so glad you came into my life and I thank you for that. I love everything
-                you do for me and I love how you treat me, as you always show your love and care for me and are always there for me. I really could not have ask for anyone
-                better. Hope I can do the same for you... I love you 8>`;
-                document.getElementById("final-message").style.display = "block";
-                document.getElementById("congrats-image").style.display = "block";
-                document.getElementById("name-input").style.display = "none";
-            }
-        }
-        
-        function moveButton() {
-            let x = Math.random() * (window.innerWidth - 100);
-            let y = Math.random() * (window.innerHeight - 50);
-            document.getElementById("yes-button").style.left = `${x}px`;
-            document.getElementById("yes-button").style.top = `${y}px`;
-        }
-    </script>
-</body>
-<img id="congrats-image" src="my_love.jpg" alt="Valentine's image">
+        showRandomQuote();
+        </script>
+    </body>
 </html>
